@@ -182,7 +182,7 @@ class JiraClient:
 
     def find_open_bug(self, tc_id: str) -> Issue | None:
         jql = (f'project = "{self.project}" AND labels = "{LABEL}" AND labels = "{tc_id}" '
-               f"AND statusCategory != Done ORDER BY created DESC")
+               f"AND issuetype = Bug AND statusCategory != Done ORDER BY created DESC")
         data = self._check(self.http.post(f"{self.base}/rest/api/3/search/jql",
                                           json={"jql": jql, "fields": ["summary", "status"], "maxResults": 1}))
         issues = data.get("issues", [])
@@ -218,6 +218,20 @@ class JiraClient:
             r = self.http.post(f"{self.base}/rest/api/3/issue", json={"fields": fields})
         key = self._check(r)["key"]
         return Issue(key=key, summary=summary, status="To Do", done=False)
+
+    def link_to_stories(self, key: str, requirements: list[str]) -> list[str]:
+        """Hubungkan bug ke story requirement (story berlabel REQ-xx) dengan link "Relates"."""
+        linked = []
+        for req in requirements:
+            jql = f'project = "{self.project}" AND issuetype = Story AND labels = "{req}"'
+            data = self._check(self.http.post(f"{self.base}/rest/api/3/search/jql",
+                                              json={"jql": jql, "fields": ["summary"], "maxResults": 1}))
+            for story in data.get("issues", []):
+                self._check(self.http.post(f"{self.base}/rest/api/3/issueLink", json={
+                    "type": {"name": "Relates"}, "inwardIssue": {"key": key},
+                    "outwardIssue": {"key": story["key"]}}))
+                linked.append(story["key"])
+        return linked
 
     def attach(self, key: str, path: Path):
         mime = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
@@ -267,6 +281,10 @@ def sync_bugs(wb, cases, jira, root: Path, workbook_name: str, result: Result) -
         else:
             issue = jira.create_bug(tc, workbook_name)
             result.created.append((tc.id, issue.key))
+            try:
+                jira.link_to_stories(issue.key, tc.requirements)
+            except RuntimeError as exc:
+                result.warnings.append(f"{issue.key}: gagal dihubungkan ke story ({exc})")
             ev = evidence_path(tc, root)
             if ev:
                 try:

@@ -28,7 +28,7 @@ Tahap pertama proyek ini adalah **QA manual yang terhubung otomatis dengan Jira*
 |---|---|
 | Summary | Hasil per modul dan bug per severity (rumus Excel) |
 | Test Plan | Tujuan, ruang lingkup, pendekatan, kriteria mulai/selesai, risiko |
-| Requirements | 12 requirement (REQ-01 s.d. REQ-12) |
+| Requirements | 12 requirement (REQ-01 s.d. REQ-12) beserta story Jira-nya |
 | RTM | Requirement → test case → hasil → bug. **Diisi otomatis** |
 | Autentikasi, Rekening, Transfer, Bill Pay, Transaksi, Profil & Pinjaman | 48 test case (21 positif, 27 negatif), dirancang dengan equivalence partitioning, boundary value, state transition, dan skenario negatif |
 | Bug Report | Daftar bug dengan status dan link Jira. **Diisi otomatis** |
@@ -53,7 +53,7 @@ Kolom test case mengikuti format lembar kerja QA: Modul, Feature, Test Case, Tes
 ## Setup sekali saja
 
 **1. Jira**
-- Buat proyek Jira untuk ParaBank (contoh key: `PB`) yang memiliki issue type **Bug**.
+- Proyek `PB` sudah berisi epic **PB-1 QA manual ParaBank** dan 12 story requirement (PB-2 s.d. PB-13, berlabel `REQ-01` s.d. `REQ-12`) lengkap dengan kriteria penerimaan dan ID test case. Nomor story juga tercatat di sheet Requirements.
 - Buat API token di <https://id.atlassian.com/manage-profile/security/api-tokens>.
 
 **2. GitHub repo → Settings → Secrets and variables → Actions**
@@ -85,6 +85,7 @@ Untuk tersambung ke Jira dari laptop, isi dulu variabel lingkungan yang sama den
 
 - Membaca semua sheet yang memiliki kolom **Test Case ID**, jadi modul baru cukup ditambahkan sebagai sheet baru dengan header yang sama.
 - **Tidak membuat tiket ganda.** Sebelum membuat tiket, skrip mencari tiket terbuka berlabel `parabank-manual` + ID test case. Baris yang sudah punya Bug ID dilewati.
+- Setiap bug baru dihubungkan (link *Relates*) ke story requirement-nya, yaitu story berlabel `REQ-xx`.
 - Severity dipetakan ke priority Jira (Critical → Highest). Jika proyek tidak memakai field priority, tiket tetap dibuat tanpa priority.
 - Screenshot di kolom Capture diunggah sebagai lampiran, hanya jika file berada di dalam repo.
 - **Workbook hanya disimpan jika ada nilai yang berubah,** jadi tidak ada commit kosong setiap hari.

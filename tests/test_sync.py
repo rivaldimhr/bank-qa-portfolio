@@ -21,6 +21,11 @@ class FakeJira:
         self.issues = {}
         self.created = []
         self.attached = []
+        self.links = []
+
+    def link_to_stories(self, key, requirements):
+        self.links.append((key, requirements))
+        return [f"STORY-{r}" for r in requirements]
 
     def browse_url(self, key):
         return f"{self.base}/browse/{key}"
@@ -102,6 +107,7 @@ def test_baris_failed_dibuatkan_bug_dan_bug_id_ditulis(wb_path):
     sync.run(wb_path, None, jira, root=wb_path.parent)
     assert jira.created == [("PB-TRF-06", "High", "Transfer -50 diterima")]
     assert jira.attached == [("PB-1", "PB-TRF-06.png")]
+    assert jira.links == [("PB-1", ["REQ-07"])]
     assert cell(wb_path, "PB-TRF-06", "Bug ID") == "PB-1"
     assert cell(wb_path, "PB-TRF-06", "Bug Status") == "To Do"
 
