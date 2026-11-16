@@ -3,6 +3,8 @@
 #   2. Baris Failed tanpa Bug ID -> tiket Bug di Jira; status Jira ditulis balik ke Excel
 #   3. RTM dan Bug Report di Excel diperbarui; perubahan di-commit kembali ke repo
 #   4. Dashboard dipublikasikan ke branch gh-pages
+# Butuh repository variables JIRA_BASE_URL, JIRA_PROJECT_KEY dan secrets JIRA_EMAIL, JIRA_API_TOKEN.
+# Tanpa itu skrip berjalan dalam mode lokal (tanpa tiket Jira).
 name: Manual QA sync
 
 on:
