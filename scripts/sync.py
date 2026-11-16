@@ -172,6 +172,12 @@ class JiraClient:
             return None
         return cls(*(os.environ[k] for k in need))
 
+    def check(self) -> str:
+        """Pastikan kredensial dan proyek valid sebelum sinkronisasi; gagal dengan pesan jelas jika tidak."""
+        me = self._check(self.http.get(f"{self.base}/rest/api/3/myself"))
+        project = self._check(self.http.get(f"{self.base}/rest/api/3/project/{self.project}"))
+        return f"{me.get('displayName')} @ proyek {project['key']} ({project.get('name')})"
+
     def browse_url(self, key: str) -> str:
         return f"{self.base}/browse/{key}"
 
@@ -544,6 +550,8 @@ def main(argv=None):
 
     jira = None if args.local else JiraClient.from_env()
     print("Mode:", "Jira " + jira.base if jira else "lokal (tanpa Jira)")
+    if jira:
+        print("Terhubung sebagai", jira.check())
     data = run(args.workbook, args.site, jira)
     res = data["_result"]
     t = data["totals"]
