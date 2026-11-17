@@ -4,7 +4,7 @@ Pengujian aplikasi perbankan online **[ParaBank](https://parabank.parasoft.com/p
 
 Tahap pertama proyek ini adalah **QA manual yang terhubung otomatis dengan Jira**. Pengujian tetap dilakukan manusia di Excel, tetapi pembuatan tiket bug, pelacakan status, traceability, dan laporan berjalan sendiri lewat GitHub Actions. Tahap berikutnya adalah otomasi UI dan API di repo yang sama.
 
-**[Dashboard](https://rivaldimhr.github.io/bank-qa-portfolio/)** · **[Workbook Excel](manual/ParaBank-Manual-QA.xlsx)** · **[Template kosong](manual/Template-Manual-QA.xlsx)**
+**[Dashboard](https://rivaldimhr.github.io/bank-qa-portfolio/)** · **[Tutorial & latihan](docs/tutorial.md)** · **[Workbook Excel](manual/ParaBank-Manual-QA.xlsx)** · **[Template kosong](manual/Template-Manual-QA.xlsx)**
 
 ## Alur kerja
 
